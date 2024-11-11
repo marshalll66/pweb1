@@ -1,24 +1,54 @@
+/* Mengatur gaya dasar untuk seluruh halaman */
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     color: #333;
     margin: 20px;
 }
 
+/* Mengatur gaya font untuk judul */
 h3 {
+    font-size: 1.5em;
     color: #0056b3;
 }
 
-hr {
-    border: none;
-    height: 2px;
-    background-color: #0056b3;
-    margin: 15px 0;
+/* Gaya untuk informasi Fakultas */
+font[size="5"] {
+    color: #003366;
+    font-weight: bold;
 }
 
+font[size="4"] {
+    color: #00509e;
+}
+
+font[size="2"] {
+    color: #666;
+}
+
+/* Mengatur garis horizontal */
+hr {
+    border: none;
+    height: 3px;
+    background-color: #0056b3;
+    margin: 20px 0;
+}
+
+/* Mengatur gaya untuk bagian biodata */
 div {
     margin-top: 20px;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #f9f9f9;
+}
+
+div strong {
+    color: #333;
+}
+
+/* Mengatur warna untuk teks biodata */
+div strong {
+    font-weight: bold;
+    color: #444;
 }

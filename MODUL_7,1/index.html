@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Job Management</title>
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx9FsBZ1OWEyHoseUJ6WvKAn7316jwc4GDJ10asvQ-OzuYbbz6RdY57mXwZuV6Iuuzj/exec'; // Ganti dengan URL API Anda
+
+    async function fetchJobs() {
+      const response = await fetch(`${API_URL}?action=getJobs`);
+      const jobs = await response.json();
+      renderJobs(jobs);
+    }
+
+    async function addJob() {
+      const data = {
+        title: document.getElementById('title').value,
+        company: document.getElementById('company').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value,
+      };
+      await fetch(`${API_URL}?action=addJob`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      fetchJobs();
+    }
+
+    async function deleteJob(id) {
+      await fetch(`${API_URL}?action=deleteJob`, {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      fetchJobs();
+    }
+
+    function renderJobs(jobs) {
+      const table = document.getElementById('jobsTable');
+      table.innerHTML = `
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Company</th>
+          <th>Location</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      jobs.forEach(job => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td>${job.id}</td>
+          <td>${job.title}</td>
+          <td>${job.company}</td>
+          <td>${job.location}</td>
+          <td>${job.description}</td>
+          <td>
+            <button onclick="deleteJob('${job.id}')">Delete</button>
+          </td>
+        `;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchJobs);
+  </script>
+</head>
+<body>
+  <h1>Job Management</h1>
+  <table id="jobsTable"></table>
+
+  <h2>Add Job</h2>
+  <label>Title: <input type="text" id="title"></label><br>
+  <label>Company: <input type="text" id="company"></label><br>
+  <label>Location: <input type="text" id="location"></label><br>
+  <label>Description: <textarea id="description"></textarea></label><br>
+  <button onclick="addJob()">Add Job</button>
+</body>
+</html>
+

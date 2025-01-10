@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowongan Kerja CRUD</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Lowongan Kerja</h2>
+
+        <!-- Form for Create/Update -->
+        <form id="jobForm" class="mb-4">
+            <div class="form-group">
+                <label for="jobId">ID:</label>
+                <input type="text" class="form-control" id="jobId" required>
+            </div>
+
+            <div class="form-group">
+                <label for="jobTitle">Nama Jabatan:</label>
+                <input type="text" class="form-control" id="jobTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="jobDate">Tanggal:</label>
+                <input type="date" class="form-control" id="jobDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="jobStatus">Status:</label>
+                <input type="text" class="form-control" id="jobStatus" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn">Add Job</button>
+        </form>
+
+        <!-- Table to Display -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Jabatan</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="jobTableBody">
+                <!-- Job rows will be appended here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const script_url = 'https://script.google.com/macros/s/AKfycbw2Yfz8Y9zuRuEMiJY_NGnspm_XIhNvnWK6LHIwZ5iZQ9jFNnk1uVu1AHCcrLoN1zPZ/exec'; // Replace with your Google Apps Script URL
+
+            // Load jobs on page load
+            loadJobs();
+
+            // Load jobs into the table
+            function loadJobs() {
+                $.ajax({
+                    url: script_url,
+                    type: "GET",
+                    data: { action: "read" },
+                    dataType: "json",
+                    success: function (response) {
+                        const tbody = $('#jobTableBody');
+                        tbody.empty(); // Clear the table body
+
+                        response.forEach(job => {
+                            tbody.append(`
+                                <tr>
+                                    <td>${job.id}</td>
+                                    <td>${job.nama_jabatan}</td>
+                                    <td>${job.tanggal}</td>
+                                    <td>${job.status}</td>
+                                </tr>
+                            `);
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Request failed: ", textStatus, errorThrown);
+                    }
+                });
+            }
+
+            // Handle form submit for create/update
+            $('#jobForm').on('submit', function (event) {
+                event.preventDefault();
+
+                const id = $('#jobId').val();
+                const nama_jabatan = $('#jobTitle').val();
+                const tanggal = $('#jobDate').val();
+                const status = $('#jobStatus').val();
+
+                $.ajax({
+                    url: script_url,
+                    type: "GET",
+                    dataType: "jsonp",
+                    data: {
+                        id: id,
+                        nama_jabatan: nama_jabatan,
+                        tanggal: tanggal,
+                        status: status,
+                        action: 'insert'
+                    },
+                    success: function (response) {
+                        alert(response.result);
+                        loadJobs();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Request failed: ", textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
